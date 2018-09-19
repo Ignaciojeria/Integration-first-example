@@ -1,12 +1,12 @@
 package com.integration.pojo;
 
-public class GatewayMessage {
+public class SampleMessage {
 
     private String title;
 
     private String description;
 
-    public GatewayMessage(){ }
+    public SampleMessage(){ }
 
     public String getTitle() {
         return title;
