@@ -1,12 +1,19 @@
 package com.integration.service;
-
 import com.integration.pojo.SampleMessage;
-import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.Collection;
 
-@Service
+
 public class SampleMessageService {
 
-    public SampleMessage getMessage(SampleMessage sampleMessage){
-        return sampleMessage;
+    public Collection<Object> calledBySplitter(SampleMessage sampleMessage){
+
+        Collection<Object> collection=new ArrayList<>();
+
+        collection.add(sampleMessage);
+
+        collection.addAll(sampleMessage.getSampleElements());
+
+        return collection;
     }
 }
