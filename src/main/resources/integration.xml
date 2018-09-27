@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+    <gateway id="gateway" service-interface="com.integration.gateway.Gateway" default-request-channel="splitterInputChannel"/>
+
+    <channel id="splitterInputChannel"/>
+
+    <channel id="splitterOutputChannel"> </channel>
+
+    <channel id="serviceActivatorOutputChannel">
+        <queue capacity="10"/>
+    </channel>
+
+    <channel id="AgregatorOutputChannel"> </channel>
+
+    <splitter input-channel="splitterInputChannel" output-channel="splitterOutputChannel">
+        <beans:bean id="sampleMessageSplitter" class="com.integration.service.SampleMessageSplitter"/>
+    </splitter>
+
+
+    <beans:bean id="shouter" class="com.integration.service.SampleMessageServiceActivator"/>
+
+    <service-activator input-channel="splitterOutputChannel"
+                          ref="shouter"
+                          output-channel="serviceActivatorOutputChannel"
+                          method="calledByServiceAcrivator"/>
+
+    <aggregator output-channel="AgregatorOutputChannel" input-channel="serviceActivatorOutputChannel" method="joinMessage">
+        <beans:bean id="agregator" class="com.integration.service.SampleAgregator"/>
+        <poller fixed-rate="1000"/>
+    </aggregator>
+
+    <service-activator input-channel="AgregatorOutputChannel"
+                       ref="shouter"
+                       output-channel="serviceActivatorOutputChannel"
+                       method="calledByServiceAcrivator"/>
+
+
+</beans:beans>

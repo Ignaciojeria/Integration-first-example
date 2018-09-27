@@ -1,11 +1,13 @@
 package com.integration;
+import com.integration.gateway.Gateway;
 import com.integration.mock.SampleMessageMock;
 import com.integration.pojo.SampleMessage;
-import com.integration.service.SampleMessageService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.aggregator.AggregatingMessageHandler;
 import org.springframework.integration.aggregator.DefaultAggregatingMessageGroupProcessor;
 import org.springframework.integration.aggregator.ReleaseStrategy;
@@ -33,10 +35,16 @@ public class IntegrationApplication {
 
     public static void main(String[] args) {
      ConfigurableApplicationContext ctx= SpringApplication.run(IntegrationApplication.class, args);
-     SampleMessageGateway sampleMessageGateway= ctx.getBean(SampleMessageGateway.class);
-     sampleMessageGateway.send(SampleMessageMock.getMock());
-    }
 
+        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:integration.xml");
+
+        Gateway gateway=(Gateway) context.getBean("gateway");
+        gateway.send(SampleMessageMock.getMock());
+        /*
+        SampleMessageGateway sampleMessageGateway= ctx.getBean(SampleMessageGateway.class);
+        sampleMessageGateway.send(SampleMessageMock.getMock());*/
+    }
+/*
 
     @MessagingGateway(defaultRequestChannel = "defaultRequestChannel")
     public interface SampleMessageGateway {
@@ -147,6 +155,6 @@ public class IntegrationApplication {
 
 
 
-
+*/
 
 }
